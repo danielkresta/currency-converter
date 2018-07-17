@@ -1,0 +1,15 @@
+#inputBox {
+  text-align: center;
+  margin: auto;
+  height: 10mm;
+  width: 50vw;
+}
+
+input[type="text"] {
+  height: inherit;
+  width: inherit;
+  padding: 1mm 2mm 1mm 2mm;
+  border: 1px solid grey;
+  border-radius: 2mm;
+  font-size: 5mm;
+}
