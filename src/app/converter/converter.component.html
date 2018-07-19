@@ -1,7 +1,10 @@
 <div id="inputBox" class="row">
-  <input id="searchBar" [(ngModel)]="search" placeholder="type here...">
+  <input id="searchBar" [(ngModel)]="search" placeholder="type here..." (keyup)="smartSearch(search)" autofocus>
 </div>
 
 <div id="resultBox" class="row">
-  {{search}}
+  <div id="currencyOrigin">{{search}}</div>
+  <li *ngFor="let result of conversionResult">
+    {{result.value}} {{result.code}}
+  </li>
 </div>

@@ -2,7 +2,7 @@
   text-align: center;
   margin: auto;
   height: 10mm;
-  width: 50vw;
+  max-width: 200mm;
 }
 
 #searchBar {
@@ -20,7 +20,23 @@
 #resultBox {
   text-align: center;
   margin: auto;
-  height: 10mm;
-  width: 50vw;
-  padding: 1mm 2mm 1mm 2mm;
+  max-width: 200mm;
+  padding: 3mm 2mm 1mm 2mm;
+}
+
+#currencyOrigin {
+  text-align: left;
+  font-size: 7mm;
+}
+
+li {
+  text-align: right;
+  font-size: 6mm;
+  padding: 1mm;
+  border-radius: 3mm;
+  list-style-type: none;
+}
+
+li:hover {
+  background-color: #eee;
 }
