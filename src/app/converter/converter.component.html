@@ -1,3 +1,7 @@
-<div id="inputBox">
-  <input type="text">
+<div id="inputBox" class="row">
+  <input id="searchBar" [(ngModel)]="search" placeholder="type here...">
+</div>
+
+<div id="resultBox" class="row">
+  {{search}}
 </div>

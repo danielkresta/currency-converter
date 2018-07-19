@@ -5,11 +5,22 @@
   width: 50vw;
 }
 
-input[type="text"] {
+#searchBar {
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */
   height: inherit;
   width: inherit;
   padding: 1mm 2mm 1mm 2mm;
   border: 1px solid grey;
   border-radius: 2mm;
   font-size: 5mm;
+}
+
+#resultBox {
+  text-align: center;
+  margin: auto;
+  height: 10mm;
+  width: 50vw;
+  padding: 1mm 2mm 1mm 2mm;
 }
