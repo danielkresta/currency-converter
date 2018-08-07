@@ -16,7 +16,7 @@ export class CurrencyService {
   ) { }
 
   getCurrencyRates(): Observable<string> {
-    const ratesUrl = 'http://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt';
+    const ratesUrl = 'https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt';
     const options = { responseType: 'text' as 'json', withCredentials: true };
 
     return this.http.get<string>(ratesUrl, options)
