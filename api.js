@@ -3,6 +3,8 @@ const http = require('http');
 const axios = require('axios');
 const util = require('util');
 
+const pathToJSON = './currencyRates.json';
+
 function prepareRatesJSON() {
   fs.stat(pathToJSON, (err, stats) => {
     const msecsInDay = 1000*60*60*24;   // Number of miliseconds in a day
@@ -65,6 +67,6 @@ function cnbStringToObject(data) {
 }
 
 module.exports = {
-  pathToJSON: './currencyRates.json',
+  pathToJSON,
   prepareRatesJSON
 }
