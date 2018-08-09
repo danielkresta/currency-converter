@@ -66,7 +66,5 @@ function cnbStringToObject(data) {
   return currencyRates;
 }
 
-module.exports = {
-  pathToJSON,
-  prepareRatesJSON
-}
+module.exports.pathToJSON = pathToJSON;
+module.exports.prepareRatesJSON = prepareRatesJSON;
