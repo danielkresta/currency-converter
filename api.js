@@ -1,9 +1,7 @@
-var fs = require('fs');
-var http = require('http');
-
-const pathToJSON = './currencyRates.json';
-// Prepare the API
-prepareRatesJSON();
+const fs = require('fs');
+const http = require('http');
+const axios = require('axios');
+const util = require('util');
 
 function prepareRatesJSON() {
   fs.stat(pathToJSON, (err, stats) => {
@@ -20,34 +18,21 @@ function prepareRatesJSON() {
       // refresh it from the CNB
       refreshData();
     }
-
-    // Get the data and prepare the JSON
-    startApi();
   });
 
   return 1;
 }
 
 function refreshData() {
-  http.get('http://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt', (resp) => {
-  let data = '';
+  const url = 'http://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt'
+  const response = axios.get(url);
+  const data = response.data;
 
-  // A chunk of data has been recieved.
-  resp.on('data', (chunk) => {
-    data += chunk;
-  });
+  fs.writeFile(pathToJSON, JSON.stringify( cnbStringToObject(data) ), "utf8");
 
-  // The whole response has been received. Print out the result.
-  resp.on('end', () => {
-    // Write the fresh data into the .json and then start the API
-    fs.writeFile(pathToJSON, JSON.stringify( cnbStringToObject(data) ), "utf8", startApi);
-  });
-
-  }).on("error", (err) => {
-    console.log("Error: " + err.message);
-  });
 }
 
+// TODO: remove
 function startApi() {
   const port = 3000;
   fs.readFile(pathToJSON, "utf8", (err, data) => {
@@ -77,4 +62,9 @@ function cnbStringToObject(data) {
     });
   }
   return currencyRates;
+}
+
+module.exports = {
+  pathToJSON: './currencyRates.json',
+  prepareRatesJSON
 }
