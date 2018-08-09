@@ -49,7 +49,7 @@ function refreshData() {
 }
 
 function startApi() {
-  const port = 8000;
+  const port = 3000;
   fs.readFile(pathToJSON, "utf8", (err, data) => {
     const server = http.createServer((req, res) => {
       if (req.url === '/api/rates') {
