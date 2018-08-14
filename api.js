@@ -7,7 +7,7 @@ const relativePathToJSON = './currencyRates.json';
 const absolutePathToJSON = '/currencyRates.json';
 
 async function prepareRatesJSON() {
-  await fs.stat(relativePathToJSON, (err, stats) => {
+  await fs.stat(relativePathToJSON, async (err, stats) => {
     const msecsInDay = 1000*60*60*24;   // Number of miliseconds in a day
     const timeDiff = Date.now() - stats.mtime;  // Time difference between the current time and the last file modification
 
@@ -19,10 +19,10 @@ async function prepareRatesJSON() {
     if (timeDiff > msecsInDay || stats.size < 1) {
       // In case the file has not been changed for more than 1 day or the file is empty,
       // refresh it from the CNB
+      await refreshData();
     }
   });
 
-  await refreshData();
 
   return 1;
 }
@@ -30,30 +30,14 @@ async function prepareRatesJSON() {
 async function refreshData() {
   const url = 'http://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt'
 
-  //try {
+  try {
     const response = await axios.get(url);
     const data = response.data;
-  /*} catch (error) {
+
+    await fs.writeFile(relativePathToJSON, JSON.stringify( cnbStringToObject(data) ), "utf8");
+  } catch (error) {
     console.log(error);
-  }*/
-
-  await fs.writeFile(relativePathToJSON, JSON.stringify( cnbStringToObject(data) ), "utf8");
-
-}
-
-// TODO: remove
-function startApi() {
-  const port = 3000;
-  fs.readFile(relativePathToJSON, "utf8", (err, data) => {
-    const server = http.createServer((req, res) => {
-      if (req.url === '/api/rates') {
-        res.write(data);
-        res.end();
-      }
-    });
-    server.listen(port);
-    console.log("Listening on port", port, "...");
-  });
+  }
 }
 
 function cnbStringToObject(data) {

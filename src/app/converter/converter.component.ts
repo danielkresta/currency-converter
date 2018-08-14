@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CurrencyRates } from '../currency-rates';
 
 import { CurrencyService } from '../currency.service';
-import { RATES } from '../offline-rates';
 import { Convert, ConversionResult } from '../convert';
 
 @Component({
@@ -37,9 +36,9 @@ export class ConverterComponent implements OnInit {
     this.convert = new Convert();
   }
 
-  getCurrencyRates(): void {
+  async getCurrencyRates() {
     /* Gets the currency rate data from the service */
-    this.currencyService.getCurrencyRates()
+    await this.currencyService.getCurrencyRates()
     .subscribe(ratesPureData => this.ratesPureData = ratesPureData);
   }
 
