@@ -1,9 +1,10 @@
 <div id="inputBox" class="row">
+  <p id="explanation">Write the amount and the currency code. For example "100 USD"</p>
   <input id="searchBar" [(ngModel)]="search" placeholder="type here..." (keyup)="smartSearch(search)" autofocus>
 </div>
 
 <div id="resultBox" class="row">
-  <div id="currencyOrigin">{{search}}</div>
+  <div id="currencyOrigin">{{convert.converted}}</div>
   <li *ngFor="let result of conversionResult">
     {{result.value}} {{result.code}}
   </li>

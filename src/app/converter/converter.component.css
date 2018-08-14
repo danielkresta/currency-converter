@@ -5,12 +5,17 @@
   max-width: 200mm;
 }
 
+#explanation {
+  font-style: italic;
+}
+
 #searchBar {
   -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
   -moz-box-sizing: border-box;    /* Firefox, other Gecko */
   box-sizing: border-box;         /* Opera/IE 8+ */
   height: inherit;
   width: inherit;
+  min-width: 50mm;
   padding: 1mm 2mm 1mm 2mm;
   border: 1px solid grey;
   border-radius: 2mm;

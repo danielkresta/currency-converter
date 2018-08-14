@@ -1,10 +1,10 @@
 import { CurrencyRates } from './currency-rates';
 
 export class Convert {
-  type: string;
   from: CurrencyRates;
   to: CurrencyRates;
   value: number;
+  converted: string;
 }
 
 export class ConversionResult {

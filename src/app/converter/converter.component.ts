@@ -38,27 +38,24 @@ export class ConverterComponent implements OnInit {
   }
 
   getCurrencyRates(): void {
-    /* Gets the currency rate data from the service, if no data are received, the offline data from /offline-rates are used */
+    /* Gets the currency rate data from the service */
     this.currencyService.getCurrencyRates()
     .subscribe(ratesPureData => this.ratesPureData = ratesPureData);
-    if (!this.ratesPureData) {
-      this.ratesPureData = RATES;
-    }
   }
 
   parseCnbRates() {
     /* Takes the ratesPureData got from the CNB server and parses them into the rates class */
-    let countryRate: string[];
-    const rateArray = this.ratesPureData.split('\n');
-    for (let i = 2; i < rateArray.length - 1; i++) {
-      countryRate = rateArray[i].split('|');
-      this.rates.push({
-        country: countryRate[0],
-        currency: countryRate[1],
-        amount: Number(countryRate[2]),
-        code: countryRate[3],
-        rate: Number(countryRate[4].replace(/,/g, '.'))
-      });
+    console.log(this.ratesPureData);
+    const data = JSON.parse(this.ratesPureData);
+    for (let i = 2; i < data.length - 1; i++) {
+      this.rates.push(
+        data
+        /*country: data.country,
+        currency: data.currency,
+        amount: data.amount,
+        code: data.code,
+        rate: data.rate*/
+      );
     }
   }
 
@@ -78,9 +75,11 @@ export class ConverterComponent implements OnInit {
       if (this.convert.from && numberToConvert) {
         this.convert.value = numberToConvert[0];
         this.convertAll();
+        this.convert.converted = this.convert.value + ' ' + this.convert.from.code + ' =';
       } else {
         // In case the search conditions are not met or the term is deleted, empty the result
         this.conversionResult = [];
+        this.convert.converted = '';
       }
     }
   }
