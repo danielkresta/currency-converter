@@ -11,7 +11,7 @@ import { Convert, ConversionResult } from '../convert';
 })
 export class ConverterComponent implements OnInit {
   search: string;
-  ratesPureData: string;
+  ratesPureData: CurrencyRates[] = [];
   rates: CurrencyRates[] = [];
   convert: Convert;
   conversionResult: ConversionResult[] = [];
@@ -21,8 +21,6 @@ export class ConverterComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Get the data
-    this.getCurrencyRates();
     // Add the CZK
     this.rates.push({
       country: 'Česká Republika',
@@ -31,30 +29,29 @@ export class ConverterComponent implements OnInit {
       code: 'CZK',
       rate: 1
     });
+    // Get the data
+    this.getCurrencyRates();
     // Parse the data
     this.parseCnbRates();
+    console.log(this.rates);
     this.convert = new Convert();
   }
 
   async getCurrencyRates() {
     /* Gets the currency rate data from the service */
     await this.currencyService.getCurrencyRates()
-    .subscribe(ratesPureData => this.ratesPureData = ratesPureData);
+    .subscribe(ratesPureData => {
+      return this.ratesPureData = ratesPureData;
+    }, err => {
+      console.log(err, 'Could not load Currency Rates Data');
+    }
+  );
   }
 
   parseCnbRates() {
     /* Takes the ratesPureData got from the CNB server and parses them into the rates class */
-    console.log(this.ratesPureData);
-    const data = JSON.parse(this.ratesPureData);
-    for (let i = 2; i < data.length - 1; i++) {
-      this.rates.push(
-        data
-        /*country: data.country,
-        currency: data.currency,
-        amount: data.amount,
-        code: data.code,
-        rate: data.rate*/
-      );
+    for (let i = 2; i < this.ratesPureData.length - 1; i++) {
+      this.rates.push(this.ratesPureData[i]);
     }
   }
 

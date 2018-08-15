@@ -15,11 +15,10 @@ export class CurrencyService {
     private http: HttpClient
   ) { }
 
-  getCurrencyRates(): Observable<string> {
+  getCurrencyRates(): Observable<CurrencyRates[]> {
     const ratesUrl = '/api/rates';
-    const options = { responseType: 'text' as 'json', withCredentials: true };
 
-    return this.http.get<string>(ratesUrl, options)
+    return this.http.get<CurrencyRates[]>(ratesUrl)
     .pipe(
       tap(rates => console.log('fetched rates'))
     );

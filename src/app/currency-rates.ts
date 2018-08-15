@@ -1,7 +1,7 @@
 export class CurrencyRates {
-  country: string;
-  currency: string;
-  amount: number;
-  code: string;
-  rate: number;
+  public country: string;
+  public currency: string;
+  public amount: number;
+  public code: string;
+  public rate: number;
 }
