@@ -31,9 +31,6 @@ export class ConverterComponent implements OnInit {
     });
     // Get the data
     this.getCurrencyRates();
-    // Parse the data
-    this.parseCnbRates();
-    console.log(this.rates);
     this.convert = new Convert();
   }
 
@@ -41,7 +38,10 @@ export class ConverterComponent implements OnInit {
     /* Gets the currency rate data from the service */
     await this.currencyService.getCurrencyRates()
     .subscribe(ratesPureData => {
-      return this.ratesPureData = ratesPureData;
+      this.ratesPureData = ratesPureData;
+      // Parse the data
+      this.parseCnbRates();
+      return ratesPureData;
     }, err => {
       console.log(err, 'Could not load Currency Rates Data');
     }
