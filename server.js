@@ -6,11 +6,12 @@ const app = express();
 
 const apiModule = require('./api');
 
+apiModule.prepareRatesJSON();
+
 // Serve only the static files form the dist directory
 app.use(express.static(__dirname + '/dist/currency-converter'));
 
 app.get('/api/rates', (req, res) => {
-  apiModule.prepareRatesJSON();
   res.sendFile(__dirname + apiModule.absolutePathToJSON);
 });
 app.get('/*', (req,res) => {

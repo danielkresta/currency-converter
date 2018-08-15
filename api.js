@@ -22,9 +22,6 @@ async function prepareRatesJSON() {
       await refreshData();
     }
   });
-
-
-  return 1;
 }
 
 async function refreshData() {
@@ -34,7 +31,7 @@ async function refreshData() {
     const response = await axios.get(url);
     const data = response.data;
 
-    await fs.writeFile(relativePathToJSON, JSON.stringify( cnbStringToObject(data) ), "utf8");
+    await fs.writeFile(relativePathToJSON, JSON.stringify( cnbStringToObject(data) ), "utf8", err => console.log(err));
   } catch (error) {
     console.log(error);
   }
