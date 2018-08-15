@@ -4,8 +4,8 @@
 </div>
 
 <div id="resultBox" class="row">
-  <div id="currencyOrigin">{{convert.converted}}</div>
-  <li *ngFor="let result of conversionResult">
+  <div id="currencyOrigin">{{convert.converted | uppercase}}</div>
+  <li *ngFor="let result of conversionResult" (click)="onSelect(result)">
     {{result.value}} {{result.code}}
   </li>
 </div>

@@ -11,7 +11,7 @@ import { Convert, ConversionResult } from '../convert';
 })
 export class ConverterComponent implements OnInit {
   search: string;
-  ratesPureData: CurrencyRates[] = [];
+  ratesFetchedData: CurrencyRates[] = [];
   rates: CurrencyRates[] = [];
   convert: Convert;
   conversionResult: ConversionResult[] = [];
@@ -34,11 +34,16 @@ export class ConverterComponent implements OnInit {
     this.convert = new Convert();
   }
 
+  onSelect(result): void {
+    this.search = result.value + ' ' + result.code;
+    this.smartSearch(this.search);
+  }
+
   async getCurrencyRates() {
     /* Gets the currency rate data from the service */
     await this.currencyService.getCurrencyRates()
-    .subscribe(ratesPureData => {
-      this.ratesPureData = ratesPureData;
+    .subscribe(ratesFetchedData => {
+      this.ratesFetchedData = ratesFetchedData;
       // Parse the data
       this.parseCnbRates();
     }, err => {
@@ -48,9 +53,9 @@ export class ConverterComponent implements OnInit {
   }
 
   parseCnbRates() {
-    /* Takes the ratesPureData got from the CNB server and parses them into the rates class */
-    for (let i = 0; i < this.ratesPureData.length; i++) {
-      this.rates.push(this.ratesPureData[i]);
+    /* Takes the ratesFetchedData got from the CNB server and parses them into the rates class */
+    for (let i = 0; i < this.ratesFetchedData.length; i++) {
+      this.rates.push(this.ratesFetchedData[i]);
     }
   }
 
@@ -62,7 +67,7 @@ export class ConverterComponent implements OnInit {
       // Set searched currency as conversion origin
       this.convert.from = this.getRateByCode(search);
       // Find a numeric value and convert it to a number
-      const valueToConvert = search.match(/\d+/g);
+      const valueToConvert = search.replace(/,/g, '.').match(/\d+((\.)\d{1,2})?/g);
       if (valueToConvert) {
         numberToConvert = valueToConvert.map(Number);
       }
@@ -73,9 +78,10 @@ export class ConverterComponent implements OnInit {
         this.convert.converted = this.convert.value + ' ' + this.convert.from.code + ' =';
       } else {
         // In case the search conditions are not met or the term is deleted, empty the result
-        this.conversionResult = [];
-        this.convert.converted = '';
+        this.emptyResults();
       }
+    } else {
+      this.emptyResults();
     }
   }
 
@@ -111,5 +117,10 @@ export class ConverterComponent implements OnInit {
       result = result * that.to.amount / that.to.rate;
     }
     return result;
+  }
+
+  emptyResults(): void {
+    this.conversionResult = [];
+    this.convert.converted = '';
   }
 }
