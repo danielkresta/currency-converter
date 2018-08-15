@@ -41,7 +41,6 @@ export class ConverterComponent implements OnInit {
       this.ratesPureData = ratesPureData;
       // Parse the data
       this.parseCnbRates();
-      return ratesPureData;
     }, err => {
       console.log(err, 'Could not load Currency Rates Data');
     }
@@ -50,7 +49,7 @@ export class ConverterComponent implements OnInit {
 
   parseCnbRates() {
     /* Takes the ratesPureData got from the CNB server and parses them into the rates class */
-    for (let i = 2; i < this.ratesPureData.length - 1; i++) {
+    for (let i = 0; i < this.ratesPureData.length; i++) {
       this.rates.push(this.ratesPureData[i]);
     }
   }
