@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { CurrencyRates } from './currency-rates';
 
@@ -10,18 +10,20 @@ import { CurrencyRates } from './currency-rates';
   providedIn: 'root'
 })
 export class CurrencyService {
+  private _ratesUrl = '/api/rates';
 
   constructor(
     private http: HttpClient
   ) { }
 
   getCurrencyRates(): Observable<CurrencyRates[]> {
-    const ratesUrl = '/api/rates';
 
-    return this.http.get<CurrencyRates[]>(ratesUrl)
-    .pipe(
-      tap(rates => console.log('fetched rates'))
-    );
+    return this.http.get<CurrencyRates[]>(this._ratesUrl)
+      .pipe(
+        tap(
+          // rates => console.log('fetched rates'),
+          // error => console.log(error || 'Server Error')
+        )
+      );
   }
-
 }

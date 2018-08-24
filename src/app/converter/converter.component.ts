@@ -42,12 +42,12 @@ export class ConverterComponent implements OnInit {
   async getCurrencyRates() {
     /* Gets the currency rate data from the service */
     await this.currencyService.getCurrencyRates()
-    .subscribe(ratesFetchedData => {
-      this.ratesFetchedData = ratesFetchedData;
+    .subscribe(rates => {
+      this.ratesFetchedData = rates;
       // Parse the data
       this.parseCnbRates();
     }, err => {
-      console.log(err, 'Could not load Currency Rates Data');
+      console.log('Could not load Currency Rates Data \n', err.message);
     }
   );
   }

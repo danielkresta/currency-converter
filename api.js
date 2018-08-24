@@ -10,6 +10,7 @@ async function prepareRatesJSON() {
   await fs.stat(relativePathToJSON, async (err, stats) => {
     const msecsInDay = 1000*60*60*24;   // Number of miliseconds in a day
     const timeDiff = Date.now() - stats.mtime;  // Time difference between the current time and the last file modification
+    console.log("Last modified time of Rates JSON:", stats.mtime );
 
     if (err) {
       console.log(err)
@@ -19,6 +20,7 @@ async function prepareRatesJSON() {
     if (timeDiff > msecsInDay || stats.size < 1) {
       // In case the file has not been changed for more than 1 day or the file is empty,
       // refresh it from the CNB
+      console.log("JSON file outdated, updating...");
       await refreshData();
     }
   });
