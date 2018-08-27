@@ -4,7 +4,7 @@
 </div>
 
 <div id="resultBox" class="row">
-  <div id="currencyOrigin">{{convert.converted | uppercase}}</div>
+  <div *ngIf="conversionResult.length > 0" id="currencyOrigin">{{search | uppercase}} =</div>
   <li *ngFor="let result of conversionResult" (click)="onSelect(result)">
     {{result.value | currency: result.code}}
   </li>

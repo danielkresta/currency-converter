@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CurrencyRates } from '../currency-rates';
 
 import { CurrencyService } from '../currency.service';
-import { Convert, ConversionResult } from '../convert';
+import { Convert } from '../convert';
+import { ConversionResult } from '../conversion-result';
 
 @Component({
   selector: 'app-converter',
@@ -11,9 +12,7 @@ import { Convert, ConversionResult } from '../convert';
 })
 export class ConverterComponent implements OnInit {
   search: string;
-  ratesFetchedData: CurrencyRates[] = [];
   rates: CurrencyRates[] = [];
-  convert: Convert;
   conversionResult: ConversionResult[] = [];
 
   constructor(
@@ -22,7 +21,7 @@ export class ConverterComponent implements OnInit {
 
   ngOnInit() {
     // Add the CZK
-    this.rates.push({
+    this.rates = this.rates.concat({
       country: 'Česká Republika',
       currency: 'koruna',
       amount: 1,
@@ -31,7 +30,6 @@ export class ConverterComponent implements OnInit {
     });
     // Get the data
     this.getCurrencyRates();
-    this.convert = new Convert();
   }
 
   onSelect(result): void {
@@ -42,40 +40,35 @@ export class ConverterComponent implements OnInit {
   async getCurrencyRates() {
     /* Gets the currency rate data from the service */
     await this.currencyService.getCurrencyRates()
-    .subscribe(rates => {
-      this.ratesFetchedData = rates;
-      // Parse the data
-      this.parseCnbRates();
+    .subscribe(data => {
+      this.rates = this.rates.concat(data);
     }, err => {
       console.log('Could not load Currency Rates Data \n', err.message);
     }
   );
   }
 
-  parseCnbRates() {
-    /* Takes the ratesFetchedData got from the CNB server and parses them into the rates class */
-    for (let i = 0; i < this.ratesFetchedData.length; i++) {
-      this.rates.push(this.ratesFetchedData[i]);
-    }
-  }
-
   smartSearch(search: string) {
+    const convert: Convert = {
+      from: null,
+      to: null,
+      value: 0,
+    };
     if (search) {
-      let numberToConvert: number[];
+      let numberToConvert;
       // Delete the previous results
       this.conversionResult = [];
       // Set searched currency as conversion origin
-      this.convert.from = this.getRateByCode(search);
-      // Find a numeric value and convert it to a number
+      convert.from = this.getRateByCode(search);
+      // Find a numeric value and convert it to a number; also replace decimal comma by a dot
       const valueToConvert = search.replace(/,/g, '.').match(/\d+((\.)\d{1,2})?/g);
       if (valueToConvert) {
-        numberToConvert = valueToConvert.map(Number);
+        numberToConvert = valueToConvert.map(Number)[0];
       }
       // Check to see if both a value and a currency have been found
-      if (this.convert.from && numberToConvert) {
-        this.convert.value = numberToConvert[0];
-        this.convertAll();
-        this.convert.converted = this.convert.value + ' ' + this.convert.from.code + ' =';
+      if (convert.from && numberToConvert) {
+        convert.value = numberToConvert;
+        this.convertAll(convert);
       } else {
         // In case the search conditions are not met or the term is deleted, empty the result
         this.emptyResults();
@@ -87,28 +80,29 @@ export class ConverterComponent implements OnInit {
 
   getRateByCode(code: string): CurrencyRates {
     // Return the currency rate class that is suitable to the imput code (i.e. "USD")
+    code = code.trim().toUpperCase();
     return this.rates.find(function(value) {
-      return code.trim().toUpperCase().search(value.code) >= 0;
+      return code.search(value.code) >= 0;
     });
   }
 
-  convertAll(): void {
+  convertAll(convert: Convert): void {
     // Convert to all the possible currencies found in this.rates
     for (let i = 0; i < this.rates.length - 1; i++) {
-      if (this.rates[i].code !== this.convert.from.code) {
-        this.convert.to = this.rates[i];
+      if (this.rates[i].code !== convert.from.code) {
+        convert.to = this.rates[i];
         this.conversionResult.push({
-          value: this.convertOne().toFixed(2),
-          code: this.convert.to.code,
+          value: this.convertOne(convert).toFixed(2),
+          code: convert.to.code,
           currencyName: ''
         });
       }
     }
   }
 
-  convertOne(): number {
+  convertOne(convert: Convert): number {
     // Do a conversion according to values set in this.convert
-    const that = this.convert;
+    const that = convert;
     let result: number;
     result = that.value / that.from.amount * that.from.rate;
     // Convert from origin ('.from') to CZK
@@ -121,6 +115,5 @@ export class ConverterComponent implements OnInit {
 
   emptyResults(): void {
     this.conversionResult = [];
-    this.convert.converted = '';
   }
 }

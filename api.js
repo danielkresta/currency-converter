@@ -43,17 +43,22 @@ function cnbStringToObject(data) {
   let countryRate = [];
   let currencyRates =  [];
   const rateArray = data.split('\n');
-  for (let i = 2; i < rateArray.length - 1; i++) {
-    countryRate = rateArray[i].split('|');
-    currencyRates.push({
-      country: countryRate[0],
-      currency: countryRate[1],
-      amount: Number(countryRate[2]),
-      code: countryRate[3],
-      rate: Number(countryRate[4].replace(/,/g, '.'))
-    });
+  if ( rateArray[1] === "země|měna|množství|kód|kurz") {
+    for (let i = 2; i < rateArray.length - 1; i++) {
+      countryRate = rateArray[i].split('|');
+      currencyRates.push({
+        country: countryRate[0],
+        currency: countryRate[1],
+        amount: Number(countryRate[2]),
+        code: countryRate[3],
+        rate: Number(countryRate[4].replace(/,/g, '.'))
+      });
+    }
+    return currencyRates;
+  } else {
+    console.log("Error: unsupported format of TXT API.")
   }
-  return currencyRates;
+  return 0;
 }
 
 module.exports.absolutePathToJSON = absolutePathToJSON;
