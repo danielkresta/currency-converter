@@ -80,13 +80,22 @@ export class ConverterComponent implements OnInit {
 
   getRateByCode(code: string): CurrencyRates {
     // Return the currency rate class that is suitable to the imput code (i.e. "USD")
-    code = code.trim().toUpperCase();
-    return this.rates.find(function(value) {
-      return code.search(value.code) >= 0;
+    code = code.trim()          // Remove whitespace
+      .toUpperCase()            // Currency codes are stored as uppercase
+      .match(/[a-zA-Z ]*/g)     // Filter characters only
+      .join('')                 // Join array of matched strings
+      .slice(0, 5);             // Use only the first 5 letters to filter out mutiple curency codes
+    return this.rates.find(value => {
+      return code.indexOf(value.code) >= 0;
     });
   }
 
   convertAll(convert: Convert): void {
+    this.conversionResult.push({
+      value: convert.value.toFixed(2),
+      code: convert.from.code,
+      currencyName: ''
+    });
     // Convert to all the possible currencies found in this.rates
     for (let i = 0; i < this.rates.length - 1; i++) {
       if (this.rates[i].code !== convert.from.code) {

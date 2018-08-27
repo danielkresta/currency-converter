@@ -4,8 +4,10 @@
 </div>
 
 <div id="resultBox" class="row">
-  <div *ngIf="conversionResult.length > 0" id="currencyOrigin">{{search | uppercase}} =</div>
-  <li *ngFor="let result of conversionResult" (click)="onSelect(result)">
+  <div *ngIf="conversionResult.length > 0" id="currencyOrigin">
+    {{conversionResult[0].value}} {{conversionResult[0].code | uppercase}} =
+  </div>
+  <li *ngFor="let result of conversionResult | slice:1 " (click)="onSelect(result)">
     {{result.value | currency: result.code}}
   </li>
 </div>
