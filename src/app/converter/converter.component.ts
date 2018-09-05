@@ -63,7 +63,7 @@ export class ConverterComponent implements OnInit {
       // Find a numeric value and convert it to a number; also replace decimal comma by a dot
       const valueToConvert = search.replace(/,/g, '.').match(/\d+((\.)\d{1,2})?/g);
       if (valueToConvert) {
-        numberToConvert = valueToConvert.map(Number)[0];
+        numberToConvert = +valueToConvert[0];
       }
       // Check to see if both a value and a currency have been found
       if (convert.from && numberToConvert) {
